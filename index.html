@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+
+<body>
+
+</body>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/axios/0.21.1/axios.min.js"
+    integrity="sha512-bZS47S7sPOxkjU/4Bt0zrhEtWx0y0CRkhEp8IckzK+ltifIIE9EMIMTuT/mEzoIMewUINruDBIR/jJnbguonqQ=="
+    crossorigin="anonymous" referrerpolicy="no-referrer">
+
+    </script>
+
+<script>
+
+    // sequential calling
+
+    function fun1(callback1) {
+        axios.get('https://jsonplaceholder.typicode.com/todos')
+            .then(function (response) {
+                console.log(response);
+                callback1(response)
+            })
+            .catch(function (error) {
+                console.log(error);
+            });
+    }
+
+
+    function fun2(userID, callback2) {
+        axios.get('https://jsonplaceholder.typicode.com/not-found')
+            .then(function (response) {
+                console.log(response);
+                callback2(response)
+            })
+            .catch(function (error) {
+                console.log(error);
+            });
+    }
+
+    function fun3(userID, callback3) {
+        axios.get('https://jsonplaceholder.typicode.com/comments')
+            .then(function (response) {
+                console.log(response);
+                callback3(response)
+            })
+            .catch(function (error) {
+                console.log(error);
+            });
+    }
+
+
+    function callback1(res) {
+        const { userId } = res
+        func2(userId, callback2)
+        // console.log("inside callback 1" + res.data)
+    }
+    function callback2(res) {
+        const { userId } = res
+        func3(userId, callback3)
+        // console.log("inside callback 2" + res.data)
+    }
+
+    function callback3(res) {
+        // console.log("inside callback 3",res)
+    }
+
+
+    fun1(callback1)
+
+    // parallel calling
+    const req1 = axios.get('https://jsonplaceholder.typicode.com/todos')
+    const req3 = axios.get('https://jsonplaceholder.typicode.com/not-found')
+    const req2 = axios.get('https://jsonplaceholder.typicode.com/comments')
+
+    axios.all([req1, req2, req3]).then(axios.spread((...responses) => {
+        const responseOne = responses[0]
+        const responseTwo = responses[1]
+        const responesThree = responses[2]
+        console.log(responseOne)
+        console.log(responseTwo)
+        console.log(responesThree)
+
+    })).catch(errors => {
+
+        console.log(errors)
+    })
+</script>
+
+</html>
