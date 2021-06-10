@@ -40,7 +40,11 @@
                 callback2(response)
             })
             .catch(function (error) {
+
                 console.log(error);
+
+                // callback2
+                callback2(null);
             });
     }
 
@@ -62,15 +66,13 @@
         // console.log("inside callback 1" + res.data)
     }
     function callback2(res) {
-        const { userId } = res
-        func3(userId, callback3)
+        func3(res?.userId, callback3)
         // console.log("inside callback 2" + res.data)
     }
 
     function callback3(res) {
         // console.log("inside callback 3",res)
     }
-
 
     fun1(callback1)
 
